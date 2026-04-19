@@ -1,0 +1,8 @@
+employee_id,tenure_years,role_criticality,retirement_eligible_within_months
+E-0142,47,critical,18
+E-0214,28,critical,36
+E-0318,14,standard,120
+E-0441,9,critical,48
+E-0587,6,standard,240
+E-0692,3,standard,240
+E-0815,1,standard,240

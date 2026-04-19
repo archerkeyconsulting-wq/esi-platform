@@ -2,38 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    @apply scroll-smooth;
+html,
+body {
+  background-color: #F8F6F2;
+  color: #0C0C0C;
+  font-family: var(--font-dm-sans), system-ui, sans-serif;
+  min-width: 1024px;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Status dots. Only radius allowed on the app. */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+/* Print CSS for board export */
+@media print {
+  @page {
+    size: letter;
+    margin: 0.75in;
   }
 
   body {
-    @apply bg-white text-slate-900;
-  }
-}
-
-@layer components {
-  .metric-card {
-    @apply bg-white border border-slate-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow;
+    background: #FFFFFF !important;
+    color: #0C0C0C !important;
   }
 
-  .btn-primary {
-    @apply px-4 py-2 bg-brand-yellow text-slate-900 font-medium rounded-lg hover:bg-yellow-400 transition-colors;
+  [data-print-hide] {
+    display: none !important;
   }
 
-  .btn-secondary {
-    @apply px-4 py-2 bg-slate-100 text-slate-900 font-medium rounded-lg hover:bg-slate-200 transition-colors;
+  [data-print-only] {
+    display: block !important;
   }
 
-  .status-strong {
-    @apply text-status-strong;
+  [data-print-container] {
+    display: block !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+    background: #FFFFFF !important;
   }
 
-  .status-medium {
-    @apply text-status-medium;
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
-  .status-weak {
-    @apply text-status-weak;
+  a[href]::after {
+    content: '';
   }
 }
