@@ -12,6 +12,7 @@ package-lock.json
 out
 dist
 build
+tsconfig.tsbuildinfo
 
 # IDE
 .vscode
