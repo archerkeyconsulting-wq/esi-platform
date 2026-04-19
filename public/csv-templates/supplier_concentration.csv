@@ -1,0 +1,6 @@
+supplier_name,spend_percent,component_criticality,alternative_count
+Acme Tool & Die,64,critical,2
+Helix Precision,18,critical,3
+Vanguard Coatings,9,standard,5
+Peerless Fasteners,6,standard,4
+Delta Bearings,3,standard,3
