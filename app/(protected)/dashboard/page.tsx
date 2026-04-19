@@ -9,10 +9,38 @@ export const revalidate = 0
 export default async function DashboardPage() {
   const supabase = createClient()
 
-  const { data: companies } = await supabase
+  const { data: companies, error: companiesError } = await supabase
     .from('companies')
     .select('id, slug, name, industry')
     .order('name', { ascending: true })
+
+  if (companiesError) {
+    const message =
+      'Failed to load companies. RLS is likely blocking the read in demo mode.\n' +
+      'To enable the demo, apply this migration in Supabase SQL editor:\n\n' +
+      'ALTER TABLE firms DISABLE ROW LEVEL SECURITY;\n' +
+      'ALTER TABLE profiles DISABLE ROW LEVEL SECURITY;\n' +
+      'ALTER TABLE companies DISABLE ROW LEVEL SECURITY;\n' +
+      'ALTER TABLE assessments DISABLE ROW LEVEL SECURITY;\n' +
+      'ALTER TABLE signals DISABLE ROW LEVEL SECURITY;\n\n' +
+      'Or copy supabase/migrations/0002_demo_mode.sql and run it in full.'
+    console.error(message)
+    return (
+      <div className="p-10 bg-signal-bg border border-rule">
+        <h2 className="font-display text-3xl text-ink mb-4">Demo Setup Required</h2>
+        <p className="font-sans text-sm text-ink mb-6 max-w-2xl leading-relaxed">
+          The database is still enforcing Row-Level Security (RLS), which blocks reads without an authenticated user.
+          To enable the demo with three seeded companies, disable RLS on the data tables.
+        </p>
+        <div className="bg-white p-4 font-mono text-xs overflow-auto mb-6 border border-rule/50">
+          <pre className="text-ink whitespace-pre-wrap">{message}</pre>
+        </div>
+        <p className="font-mono text-xs text-muted uppercase tracking-wide">
+          After applying the migration, refresh this page.
+        </p>
+      </div>
+    )
+  }
 
   const companyIds = (companies ?? []).map((c) => c.id)
 
