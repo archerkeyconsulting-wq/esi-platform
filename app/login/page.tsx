@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
@@ -11,7 +11,18 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
   const supabase = createClient()
-  console.log('SUPABASE URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+
+  useEffect(() => {
+    // Clear potentially stale Supabase session data from localStorage
+    const keysToRemove = Object.keys(localStorage).filter(key =>
+      key.includes('sb-') || key.includes('supabase')
+    )
+    keysToRemove.forEach(key => localStorage.removeItem(key))
+
+    console.log('SUPABASE URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('SUPABASE ANON KEY (first 20 chars):', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(0, 20))
+    console.log('Cleared localStorage keys:', keysToRemove.length)
+  }, [])
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
