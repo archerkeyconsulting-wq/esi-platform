@@ -61,14 +61,7 @@ export default async function ExportPage({
         .eq('assessment_id', latest.id)
     : { data: [] }
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  const { data: profile } = user
-    ? await supabase.from('profiles').select('full_name').eq('id', user.id).maybeSingle()
-    : { data: null }
-
-  const preparedBy = profile?.full_name ?? user?.email ?? 'Operating Partner'
+  const preparedBy = 'Demo User'
   const signalsByType = new Map((signals ?? []).map((s) => [s.signal_type, s]))
   const drivers = (signals ?? [])
     .filter((s) => s.contribution > 0)

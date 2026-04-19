@@ -1,6 +1,13 @@
-import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { LeftRail, type LeftRailCompany } from '@/components/LeftRail'
+
+// Demo mode: auth is disabled. The viewer is treated as an operating partner
+// at Archer Ridge Capital — the only seeded firm. Re-enabling auth = restoring
+// the prior auth.getUser() + profiles lookup block.
+const DEMO_FIRM_NAME = 'Archer Ridge Capital'
+const DEMO_USER_NAME = 'Demo User'
+// super_admin so the admin section appears in the left rail for the walkthrough.
+const DEMO_ROLE = 'super_admin'
 
 export default async function ProtectedLayout({
   children,
@@ -8,32 +15,7 @@ export default async function ProtectedLayout({
   children: React.ReactNode
 }) {
   const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
 
-  if (!user) redirect('/login')
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('id, firm_id, full_name, role')
-    .eq('id', user.id)
-    .maybeSingle()
-
-  if (!profile) redirect('/error?reason=no-profile')
-
-  // Firm name — super_admin with no firm shows platform label.
-  let firmName = 'NARO Platform'
-  if (profile.firm_id) {
-    const { data: firm } = await supabase
-      .from('firms')
-      .select('name')
-      .eq('id', profile.firm_id)
-      .maybeSingle()
-    if (firm) firmName = firm.name
-  }
-
-  // Companies with their latest assessment score.
   const { data: companies } = await supabase
     .from('companies')
     .select('slug, name, id')
@@ -72,10 +54,10 @@ export default async function ProtectedLayout({
   return (
     <div className="min-h-screen bg-paper">
       <LeftRail
-        firmName={firmName}
+        firmName={DEMO_FIRM_NAME}
         companies={railCompanies}
-        userName={profile.full_name ?? user.email ?? 'User'}
-        role={profile.role}
+        userName={DEMO_USER_NAME}
+        role={DEMO_ROLE}
       />
       <main className="pl-[240px]" data-print-container>
         <div className="max-w-[1400px] mx-auto px-10 py-10">{children}</div>

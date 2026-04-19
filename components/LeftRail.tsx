@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
 import { StatusDot } from './StatusDot'
-import { signOut } from '@/app/actions/auth'
 import type { AssessmentStatus, Role } from '@/lib/db/types'
 
 export interface LeftRailCompany {
@@ -140,14 +139,9 @@ export function LeftRail({
         <div className="mt-3 font-mono text-xs text-paper/60 tracking-wide uppercase">
           {userName}
         </div>
-        <form action={signOut} className="mt-2">
-          <button
-            type="submit"
-            className="font-mono text-xs text-paper/60 uppercase tracking-widest hover:text-paper"
-          >
-            Sign Out
-          </button>
-        </form>
+        <div className="mt-2 font-mono text-[10px] text-paper/40 uppercase tracking-widest">
+          Demo Mode
+        </div>
       </div>
     </aside>
   )

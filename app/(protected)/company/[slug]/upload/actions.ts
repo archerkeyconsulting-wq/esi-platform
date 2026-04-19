@@ -35,11 +35,6 @@ export async function uploadCsv(
 
   const supabase = createClient()
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return { ok: false, error: 'Not authenticated.' }
-
   const { data: company, error: companyErr } = await supabase
     .from('companies')
     .select('id, name')
@@ -120,7 +115,7 @@ export async function uploadCsv(
       risk_score: scored.score,
       status: scored.status,
       source_type: 'csv',
-      created_by: user.id,
+      created_by: null,
       notes: `CSV upload: ${SIGNAL_REGISTRY[signalType].name}`,
     })
     .select('id')
@@ -167,10 +162,6 @@ export async function uploadDocumentStub(
   if (!file || file.size === 0) return { ok: false, error: 'No file provided.' }
 
   const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-  if (!user) return { ok: false, error: 'Not authenticated.' }
 
   const { data: company } = await supabase
     .from('companies')

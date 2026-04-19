@@ -1,36 +1,8 @@
-import { createClient } from '@/lib/supabase/server'
-
 export const revalidate = 0
 
-const ROLE_LABELS: Record<string, string> = {
-  super_admin: 'Super Admin',
-  operating_partner: 'Operating Partner',
-  gp: 'General Partner',
-  read_only: 'Read-Only',
-}
-
-export default async function SettingsPage() {
-  const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  const { data: profile } = user
-    ? await supabase
-        .from('profiles')
-        .select('full_name, role, firm_id, created_at')
-        .eq('id', user.id)
-        .maybeSingle()
-    : { data: null }
-
-  const { data: firm } = profile?.firm_id
-    ? await supabase
-        .from('firms')
-        .select('name')
-        .eq('id', profile.firm_id)
-        .maybeSingle()
-    : { data: null }
-
+// Demo mode: static profile view. Re-enable the Supabase-backed profile lookup
+// by restoring auth.getUser() + profiles/firms queries.
+export default function SettingsPage() {
   return (
     <div>
       <header className="mb-10">
@@ -41,28 +13,16 @@ export default async function SettingsPage() {
       </header>
 
       <div className="border-t border-b border-rule divide-y divide-rule/60">
-        <Row label="Name" value={profile?.full_name ?? '—'} />
-        <Row label="Email" value={user?.email ?? '—'} />
-        <Row
-          label="Role"
-          value={profile ? ROLE_LABELS[profile.role] ?? profile.role : '—'}
-        />
-        <Row label="Firm" value={firm?.name ?? (profile?.role === 'super_admin' ? 'NARO Platform (all firms)' : '—')} />
-        <Row
-          label="Member Since"
-          value={
-            profile?.created_at
-              ? new Date(profile.created_at).toLocaleDateString('en-US', {
-                  month: 'long',
-                  year: 'numeric',
-                })
-              : '—'
-          }
-        />
+        <Row label="Name" value="Demo User" />
+        <Row label="Email" value="demo@archerridge.capital" />
+        <Row label="Role" value="Operating Partner" />
+        <Row label="Firm" value="Archer Ridge Capital" />
+        <Row label="Member Since" value="April 2026" />
       </div>
 
       <p className="font-sans text-sm text-muted mt-8 max-w-2xl leading-relaxed">
-        Need a password reset or profile change? Contact your administrator.
+        Demo mode — authentication is disabled. User management and profile
+        editing will return when auth is re-enabled.
       </p>
     </div>
   )
